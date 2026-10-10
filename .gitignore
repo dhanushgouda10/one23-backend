@@ -1,0 +1,15 @@
+# Build output
+target/
+!.mvn/wrapper/maven-wrapper.properties
+
+# Secrets: real settings live in .env (never commit). .env.example is the safe template.
+.env
+.env.*
+!.env.example
+
+# IDE / OS files
+.idea/
+*.iml
+.vscode/
+.DS_Store
+*.log
