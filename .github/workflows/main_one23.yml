@@ -6,7 +6,7 @@ name: Build and deploy JAR app to Azure Web App - one23
 on:
   push:
     branches:
-      - main
+      - 'main'
   workflow_dispatch:
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
           distribution: 'microsoft'
 
       - name: Build with Maven
-        run: mvn -B clean package -DskipTests
+        run: mvn clean install
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -49,9 +49,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_42897113D5954DA683A068A332A2DFC6 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_7E82FA1116EB4B4AB4C5377E2AE1E72D }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_CDD0843A8C044BA18FF15B842AE313F7 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_6CE1F8B1337941D6A201884BB1F0F9A9 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_293E903386D5439FB45E2668FDECDF8F }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_E88138242F2D44719FC67D7CAF6FC1A2 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
