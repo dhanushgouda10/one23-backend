@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 public class RideJoinRequest {
 
     @NotBlank(message = "Pickup hub is required")
-    @JsonAlias({"location", "pickupHub"})
+    @JsonAlias("location")
     private String pickupHub;
 
     @NotBlank(message = "Destination is required")

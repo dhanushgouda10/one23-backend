@@ -72,11 +72,7 @@ public class ChatController {
 
         User user = getLoggedInUser(authentication);
 
-        if (user == null) {
-            return;
-        }
-
-        // Only group members can send chat
+        // Only group members can send chat (isActiveMember is also false when user is null)
         if (!rideService.isActiveMember(groupId, user)) {
             return;
         }
@@ -102,11 +98,7 @@ public class ChatController {
 
         User user = getLoggedInUser(authentication);
 
-        if (user == null) {
-            return;
-        }
-
-        // Only group members can share location
+        // Only group members can share location (isActiveMember is also false when user is null)
         if (!rideService.isActiveMember(groupId, user)) {
             return;
         }

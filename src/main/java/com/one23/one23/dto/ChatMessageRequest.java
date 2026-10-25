@@ -11,10 +11,6 @@ public class ChatMessageRequest {
     public ChatMessageRequest() {
     }
 
-    public ChatMessageRequest(String message) {
-        this.message = message;
-    }
-
     public String getMessage() {
         return message;
     }

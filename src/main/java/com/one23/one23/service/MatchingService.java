@@ -107,10 +107,14 @@ public class MatchingService {
             if (ride.getId().equals(joinerRide.getId())) {
                 continue; // already in the group
             }
-            // add() returns false if this user is already in the group -> skip
+            // Skip a second ride by a user who is already in the group
             // (nobody can be grouped with themselves)
-            if (ride.getUser() != null && !usersInGroup.add(ride.getUser().getId())) {
-                continue;
+            if (ride.getUser() != null) {
+                Long userId = ride.getUser().getId();
+                if (usersInGroup.contains(userId)) {
+                    continue;
+                }
+                usersInGroup.add(userId);
             }
             group.add(ride);
         }

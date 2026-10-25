@@ -5,7 +5,8 @@ import com.one23.one23.model.RideRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-// Response body for the Group Lobby page
+// Response body for the Group Lobby page (GET /api/groups/{groupId}).
+// Fields are filled once in fromRides(); the getters are what Jackson turns into JSON.
 public class GroupLobbyResponse {
 
     private String groupId;
@@ -21,20 +22,20 @@ public class GroupLobbyResponse {
             return response;
         }
 
+        // All rides in a group share the same route and status, so the first one is enough
         RideRequest firstRide = rides.get(0);
-        response.setGroupId(firstRide.getGroupId());
-        response.setPickupHub(firstRide.getPickupHub());
-        response.setDestination(firstRide.getDestination());
-        response.setStatus(firstRide.getStatus());
+        response.groupId = firstRide.getGroupId();
+        response.pickupHub = firstRide.getPickupHub();
+        response.destination = firstRide.getDestination();
+        response.status = firstRide.getStatus();
 
         for (RideRequest ride : rides) {
             Member member = new Member();
-            member.setFullName(ride.getName());
-
+            member.fullName = ride.getName();
             // Email is optional because older rides may not have a linked user record
-            member.setEmail(ride.getUser() != null ? ride.getUser().getEmail() : null);
-            member.setRideStatus(ride.getStatus());
-            response.getMembers().add(member);
+            member.email = ride.getUser() != null ? ride.getUser().getEmail() : null;
+            member.rideStatus = ride.getStatus();
+            response.members.add(member);
         }
 
         return response;
@@ -44,42 +45,23 @@ public class GroupLobbyResponse {
         return groupId;
     }
 
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
-    }
-
     public String getPickupHub() {
         return pickupHub;
-    }
-
-    public void setPickupHub(String pickupHub) {
-        this.pickupHub = pickupHub;
     }
 
     public String getDestination() {
         return destination;
     }
 
-    public void setDestination(String destination) {
-        this.destination = destination;
-    }
-
     public String getStatus() {
         return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public List<Member> getMembers() {
         return members;
     }
 
-    public void setMembers(List<Member> members) {
-        this.members = members;
-    }
-
+    // One person in the group
     public static class Member {
 
         private String fullName;
@@ -90,24 +72,12 @@ public class GroupLobbyResponse {
             return fullName;
         }
 
-        public void setFullName(String fullName) {
-            this.fullName = fullName;
-        }
-
         public String getEmail() {
             return email;
         }
 
-        public void setEmail(String email) {
-            this.email = email;
-        }
-
         public String getRideStatus() {
             return rideStatus;
-        }
-
-        public void setRideStatus(String rideStatus) {
-            this.rideStatus = rideStatus;
         }
     }
 }
