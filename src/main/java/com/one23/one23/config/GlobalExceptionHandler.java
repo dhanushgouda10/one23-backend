@@ -1,5 +1,6 @@
 package com.one23.one23.config;
 
+import com.one23.one23.ai.AiUnavailableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -39,10 +40,10 @@ public class GlobalExceptionHandler {
 
     // Top-level "message" shows the first field error
     private String firstFieldErrorMessage(Map<String, String> fieldErrors) {
-        for (String message : fieldErrors.values()) {
-            return message;
+        if (fieldErrors.isEmpty()) {
+            return "Validation failed";
         }
-        return "Validation failed";
+        return fieldErrors.values().iterator().next();
     }
 
     // Expected "bad input" errors thrown on purpose (e.g. MatchingService) -> 400
@@ -51,6 +52,17 @@ public class GlobalExceptionHandler {
         Map<String, Object> body = new HashMap<>();
         body.put("message", ex.getMessage() != null ? ex.getMessage() : "Request could not be processed");
         return ResponseEntity.badRequest().body(body);
+    }
+
+    // Gemini down, misconfigured (bad key/model), timed out, or AI switched off -> 503.
+    // The cause is logged for us; the client only sees a generic message.
+    @ExceptionHandler(AiUnavailableException.class)
+    public ResponseEntity<Map<String, Object>> handleAiUnavailable(AiUnavailableException ex) {
+        logger.warn("AI unavailable: {} ({})", ex.getMessage(),
+                ex.getCause() != null ? ex.getCause().getMessage() : "no cause");
+        Map<String, Object> body = new HashMap<>();
+        body.put("message", "AI is unavailable right now");
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(body);
     }
 
     // Anything unexpected (including NullPointerException, which is a real bug):
